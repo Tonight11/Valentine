@@ -1,43 +1,70 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, watch, onMounted } from 'vue'
+import { useLocalStorage } from "@vueuse/core";
+import Quiz from "@/components/Quiz.vue";
+import Congratulations from "@/components/Congratulations.vue";
+import ParticlesBg from '@/components/ui/particle/ParticlesBg.vue'
+
+// Проверяем, проходил ли пользователь квиз
+const isCompleted = useLocalStorage("quizCompleted", false);
+// Аудио для фона
+const audio = ref(new Audio("/love-theme.mp3"));
+audio.value.loop = true; // Зацикливаем
+const isPlaying = ref(true);
+
+// Функция для управления музыкой
+const toggleMusic = () => {
+  if (isPlaying.value) {
+    audio.value.pause();
+  } else {
+    audio.value.play();
+  }
+  isPlaying.value = !isPlaying.value;
+};
+
+// Следим за завершением квиза и включаем музыку
+watch(isCompleted, (newVal) => {
+  if (newVal) {
+    audio.value.play();
+    isPlaying.value = true;
+  }
+});
+
+onMounted(() => {
+  isPlaying.value = true;
+  audio.value.play();
+})
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center min-h-screen py-2">
-    <div class="flex items-center justify-center">
-      <a href="https://vitejs.dev" target="_blank">
-        <img src="/vite.svg" class="logo" alt="Vite logo" />
-      </a>
-      <a href="https://vuejs.org/" target="_blank">
-        <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-      </a>
-      <a href="https://shadcn-vue.com/" target="_blank">
-        <img src="/shadcn-vue.svg" class="logo shad" alt="Shadcn-Vue logo" />
-      </a>
-    </div>
-    <div class="flex items-center justify-center mt-4">
-      <HelloWorld msg="Vite + Vue + Shadcn-Vue + TS" />
-    </div>
+  <div class="min-h-screen flex items-center justify-center bg-pink-100 pt-20 px-2">
+    <Quiz class="relative z-[100] px-10" v-if="!isCompleted" />
+    <Congratulations class="relative z-[100]" v-else />
+    <button
+      class="absolute z-[100] top-4 right-4 p-3 bg-red-500 text-white rounded-full shadow-md transition-transform hover:scale-110"
+      @click="toggleMusic">
+      {{ isPlaying ? "🔊 Выключить" : "🎵 Включить" }}
+    </button>
+    <ParticlesBg class="absolute inset-0 w-full h-full -z-1" :quantity="100" :ease="100" :color="'#ef4444'"
+      :staticity="10" refresh />
   </div>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+/* Анимация появления */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-
-.logo.shad:hover {
-  filter: drop-shadow(0 0 1em #42b883);
+div {
+  animation: fade-in 1s ease-out;
 }
 </style>
