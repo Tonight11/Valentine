@@ -1,24 +1,28 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
-import { useLocalStorage } from "@vueuse/core";
-import Quiz from "@/components/Quiz.vue";
-import Congratulations from "@/components/Congratulations.vue";
-import ParticlesBg from '@/components/ui/particle/ParticlesBg.vue'
+import { ref, onMounted } from 'vue';
+import { songs } from '@/data/music';
+import Navigation from '@/components/Navigation.vue';
+import Hero from '@/components/Hero.vue';
+import Timeline from '@/components/Timeline.vue';
+import PhotoGallery from '@/components/PhotoGallery.vue';
+import MoodPhrases from '@/components/MoodPhrases.vue';
+import WhyILoveYou from '@/components/WhyILoveYou.vue';
+import MemoryMap from '@/components/MemoryMap.vue';
+import FuturePlans from '@/components/FuturePlans.vue';
+import MiniGames from '@/components/MiniGames.vue';
+import Achievements from '@/components/Achievements.vue';
+import MusicPlayer from '@/components/MusicPlayer.vue';
+import ParticlesBg from '@/components/ui/particle/ParticlesBg.vue';
 
 
-const songs = ref([
-  { src: "/love-theme.mp3", name: "Love Theme" },
-  { src: "/jap.mp3", name: "Romantic Melody" },
-]);
-// Проверяем, проходил ли пользователь квиз
 const currentSongIndex = ref(0);
-const isCompleted = useLocalStorage("quizCompleted", false);
-// Аудио для фона
-const audio = ref(new Audio(songs.value[currentSongIndex.value].src));
-audio.value.loop = true; // Зацикливаем
-const isPlaying = ref(true);
+const audio = ref(new Audio(songs[currentSongIndex.value].src));
+audio.value.loop = true;
+const isPlaying = ref(false);
 
-// Функция для управления музыкой
+const activeSection = ref('hero');
+
+// Music controls
 const toggleMusic = () => {
   if (isPlaying.value) {
     audio.value.pause();
@@ -29,61 +33,104 @@ const toggleMusic = () => {
 };
 
 const nextSong = () => {
-  currentSongIndex.value = (currentSongIndex.value + 1) % songs.value.length;
+  currentSongIndex.value = (currentSongIndex.value + 1) % songs.length;
   audio.value.pause();
-  audio.value = new Audio(songs.value[currentSongIndex.value].src);
+  audio.value = new Audio(songs[currentSongIndex.value].src);
   audio.value.loop = true;
   if (isPlaying.value) audio.value.play();
 };
 
-// Следим за завершением квиза и включаем музыку
-watch(isCompleted, (newVal) => {
-  if (newVal) {
-    audio.value.play();
-    isPlaying.value = true;
+// Navigation
+const navigateToSection = (sectionId: string) => {
+  activeSection.value = sectionId;
+  const element = document.getElementById(sectionId);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
   }
-});
+};
+
+// Auto-detect active section on scroll
+const handleScroll = () => {
+  const sections = ['hero', 'timeline', 'gallery', 'moods', 'reasons', 'places', 'plans', 'games', 'achievements'];
+  
+  for (const sectionId of sections) {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      if (rect.top <= 100 && rect.bottom >= 100) {
+        activeSection.value = sectionId;
+        break;
+      }
+    }
+  }
+};
+
 
 onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+  // Auto-play music on mount
   isPlaying.value = true;
-  audio.value.play();
-})
+  audio.value.play().catch(() => {
+    // Auto-play might be blocked, user will need to click play
+    isPlaying.value = false;
+  });
+});
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-pink-100 pt-20 px-2">
-    <Quiz class="relative z-[100] px-10" v-if="!isCompleted" />
-    <Congratulations class="relative z-[100]" v-else />
-    <div class="absolute z-[200] top-4 right-4 flex gap-2">
-      <button class=" p-3 bg-red-500 text-white rounded-full shadow-md transition-transform hover:scale-110"
-        @click="toggleMusic">
-        {{ isPlaying ? "🔊 Выключить" : "🎵 Включить" }}
-      </button>
-      <button class="p-3 bg-red-500 text-white rounded-full shadow-md transition-transform hover:scale-110"
-        @click="nextSong">
-        ⏭ {{ songs[currentSongIndex].name }}
-      </button>
+  <div class="min-h-screen bg-pink-50">
+    <!-- Navigation -->
+    <Navigation :activeSection="activeSection" @navigate="navigateToSection" />
+
+    <!-- Main Content -->
+    <div class="pt-16">
+      <Hero />
+      <Timeline />
+      <PhotoGallery />
+      <MoodPhrases />
+      <WhyILoveYou />
+      <MemoryMap />
+      <FuturePlans />
+      <MiniGames />
+      <Achievements />
     </div>
-    <ParticlesBg class="absolute inset-0 w-full h-full -z-1" :quantity="100" :ease="100" :color="'#ef4444'"
-      :staticity="10" refresh />
+
+
+    <!-- Music Player -->
+    <MusicPlayer
+      :currentSongIndex="currentSongIndex"
+      :isPlaying="isPlaying"
+      @toggleMusic="toggleMusic"
+      @nextSong="nextSong"
+    />
+
+    <!-- Particle Background -->
+    <ParticlesBg
+      class="fixed inset-0 w-full h-full -z-1 pointer-events-none"
+      :quantity="50"
+      :ease="100"
+      :color="'#ef4444'"
+      :staticity="10"
+      refresh
+    />
   </div>
 </template>
 
 <style scoped>
-/* Анимация появления */
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Global animations */
 @keyframes fade-in {
   from {
     opacity: 0;
     transform: translateY(20px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-div {
-  animation: fade-in 1s ease-out;
 }
 </style>
