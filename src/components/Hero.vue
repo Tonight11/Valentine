@@ -9,7 +9,7 @@ const { days, formattedTime } = useDaysCounter('2025-09-08');
   <section id="hero" class="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
     <div class="text-center z-10 max-w-4xl mx-auto">
       <h1 class="text-5xl md:text-7xl font-bold text-red-500 mb-6 animate-fade-in">
-        Привет, Жумасия! 💕
+        Привет, Каныкей! 💕
       </h1>
       <p class="text-2xl md:text-3xl text-gray-700 mb-8 animate-fade-in-delay-1">
         Добро пожаловать на наш особенный сайт!

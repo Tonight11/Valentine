@@ -58,7 +58,7 @@ onMounted(() => {
 
 <template>
     <div v-if="!isCompleted" class="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md text-center">
-        <h2 class="text-2xl font-bold mb-4 text-red-500">❤️ Привет Жумасия | Адина ❤️</h2>
+        <h2 class="text-2xl font-bold mb-4 text-red-500">❤️ Привет Кей ❤️</h2>
         <h2 class="text-2xl font-bold mb-4 text-red-500">❤️ Пройди квиз на 14 февраля ❤️</h2>
         <div v-for="q in questions" :key="q.id" class="mb-4">
             <p class="text-lg font-semibold">{{ q.question }}</p>

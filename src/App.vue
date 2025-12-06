@@ -89,7 +89,7 @@ onMounted(() => {
       <PhotoGallery />
       <MoodPhrases />
       <WhyILoveYou />
-      <MemoryMap />
+      <!-- <MemoryMap /> -->
       <FuturePlans />
       <MiniGames />
       <Achievements />
