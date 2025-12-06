@@ -72,6 +72,4 @@ export interface Song {
 export interface Photo {
   id: number;
   src: string;
-  caption: string;
-  date?: string;
 }
