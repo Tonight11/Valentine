@@ -7,11 +7,13 @@ import Timeline from '@/components/Timeline.vue';
 import PhotoGallery from '@/components/PhotoGallery.vue';
 import MoodPhrases from '@/components/MoodPhrases.vue';
 import WhyILoveYou from '@/components/WhyILoveYou.vue';
+import LoveLetters from '@/components/LoveLetters.vue';
 import MemoryMap from '@/components/MemoryMap.vue';
 import FuturePlans from '@/components/FuturePlans.vue';
 import MiniGames from '@/components/MiniGames.vue';
 import Achievements from '@/components/Achievements.vue';
 import MusicPlayer from '@/components/MusicPlayer.vue';
+import Quiz from '@/components/Quiz.vue';
 import ParticlesBg from '@/components/ui/particle/ParticlesBg.vue';
 
 
@@ -51,8 +53,8 @@ const navigateToSection = (sectionId: string) => {
 
 // Auto-detect active section on scroll
 const handleScroll = () => {
-  const sections = ['hero', 'timeline', 'gallery', 'moods', 'reasons', 'places', 'plans', 'games', 'achievements'];
-  
+  const sections = ['hero', 'timeline', 'gallery', 'moods', 'letters', 'reasons', 'places', 'plans', 'games', 'achievements', 'quiz'];
+
   for (const sectionId of sections) {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -78,7 +80,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-pink-50">
+  <div class="min-h-screen bg-emerald-50">
     <!-- Navigation -->
     <Navigation :activeSection="activeSection" @navigate="navigateToSection" />
 
@@ -88,31 +90,25 @@ onMounted(() => {
       <Timeline />
       <PhotoGallery />
       <MoodPhrases />
+      <LoveLetters />
       <WhyILoveYou />
       <!-- <MemoryMap /> -->
       <FuturePlans />
       <MiniGames />
       <Achievements />
+      <!-- <section id="quiz" class="py-20 bg-emerald-50">
+        <Quiz />
+      </section> -->
     </div>
 
 
     <!-- Music Player -->
-    <MusicPlayer
-      :currentSongIndex="currentSongIndex"
-      :isPlaying="isPlaying"
-      @toggleMusic="toggleMusic"
-      @nextSong="nextSong"
-    />
+    <MusicPlayer :currentSongIndex="currentSongIndex" :isPlaying="isPlaying" @toggleMusic="toggleMusic"
+      @nextSong="nextSong" />
 
     <!-- Particle Background -->
-    <ParticlesBg
-      class="fixed inset-0 w-full h-full -z-1 pointer-events-none"
-      :quantity="50"
-      :ease="100"
-      :color="'#ef4444'"
-      :staticity="10"
-      refresh
-    />
+    <ParticlesBg class="fixed inset-0 w-full h-full -z-1 pointer-events-none" :quantity="100" :ease="100"
+      :color="'#10b981'" :staticity="50" refresh />
   </div>
 </template>
 
@@ -128,6 +124,7 @@ html {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

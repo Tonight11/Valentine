@@ -1,70 +1,76 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { achievements } from '@/data/achievements';
+import IconRenderer from '@/components/ui/IconRenderer.vue';
+import { Trophy, Check, Lock, Star } from 'lucide-vue-next';
 
-const sortedAchievements = [...achievements].sort((a, b) => 
+const sortedAchievements = [...achievements].sort((a, b) =>
   new Date(a.date || '').getTime() - new Date(b.date || '').getTime()
 );
 </script>
 
 <template>
-  <section id="achievements" class="min-h-screen py-20 px-4 bg-gradient-to-b from-white to-pink-50">
+  <section id="achievements" class="min-h-screen py-20 px-4 bg-gradient-to-b from-white to-emerald-50">
     <div class="max-w-6xl mx-auto">
-      <h2 class="text-4xl md:text-5xl font-bold text-center text-red-500 mb-4">
-        🏆 Наши достижения
-      </h2>
+      <div class="flex items-center justify-center gap-3 mb-4">
+        <Trophy class="w-10 h-10 text-emerald-500" />
+        <h2 class="text-4xl md:text-5xl font-bold text-center text-emerald-500">
+          Наши достижения
+        </h2>
+      </div>
       <p class="text-center text-gray-600 mb-12 text-lg">
-        Каждый момент вместе - это победа! 💕
+        Каждый момент вместе расцветает новой победой!
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div
-          v-for="achievement in sortedAchievements"
-          :key="achievement.id"
-          :class="[
-            'rounded-2xl shadow-lg p-6 transition-all duration-300 transform hover:scale-105',
-            achievement.unlocked
-              ? 'bg-gradient-to-br from-yellow-100 to-orange-100 border-2 border-yellow-400'
-              : 'bg-gradient-to-br from-gray-200 to-gray-300 border-2 border-gray-400 opacity-60'
-          ]"
-        >
+        <div v-for="achievement in sortedAchievements" :key="achievement.id" :class="[
+          'rounded-3xl shadow-lg p-8 transition-all duration-300 transform hover:scale-105 border-2',
+          achievement.unlocked
+            ? 'bg-white border-emerald-400'
+            : 'bg-gray-50 border-gray-200 opacity-60'
+        ]">
           <div class="text-center">
-            <div
-              :class="[
-                'text-6xl mb-4',
-                !achievement.unlocked && 'grayscale opacity-50'
-              ]"
-            >
-              {{ achievement.icon }}
+            <div class="flex justify-center mb-6">
+              <div :class="[
+                'w-20 h-20 rounded-2xl flex items-center justify-center shadow-inner',
+                achievement.unlocked ? 'bg-emerald-50' : 'bg-gray-100'
+              ]">
+                <IconRenderer v-if="achievement.icon" :name="achievement.icon" :size="40"
+                  :color="achievement.unlocked ? '#10b981' : '#9ca3af'" />
+              </div>
             </div>
             <h3 class="text-xl font-bold text-gray-800 mb-2">
               {{ achievement.title }}
             </h3>
-            <p class="text-sm text-gray-700 mb-3">
+            <p class="text-sm text-gray-700 mb-6">
               {{ achievement.description }}
             </p>
-            <div
-              :class="[
-                'inline-block px-4 py-1 rounded-full text-xs font-medium',
-                achievement.unlocked
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-500 text-white'
-              ]"
-            >
-              {{ achievement.unlocked ? '✓ Разблокировано' : '🔒 Скоро...' }}
+            <div :class="[
+              'inline-flex items-center gap-2 px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider',
+              achievement.unlocked
+                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200'
+                : 'bg-gray-400 text-white'
+            ]">
+              <component :is="achievement.unlocked ? Check : Lock" class="w-4 h-4" />
+              {{ achievement.unlocked ? 'Разблокировано' : 'Заблокировано' }}
             </div>
-            <p class="text-xs text-gray-600 mt-2">
-              {{ achievement.date ? new Date(achievement.date).toLocaleDateString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' }) : '' }}
+            <p class="text-xs text-gray-500 mt-4 font-medium italic">
+              {{ achievement.date ? new Date(achievement.date).toLocaleDateString('ru-RU', {
+                year: 'numeric', month:
+                  'long', day: 'numeric'
+              }) : '' }}
             </p>
           </div>
         </div>
       </div>
 
-      <div class="mt-12 text-center">
-        <div class="inline-block bg-white rounded-2xl shadow-lg p-6">
-          <p class="text-2xl font-bold text-red-500 mb-2">
-            {{ achievements.filter(a => a.unlocked).length }} / {{ achievements.length }} разблокировано! 🎉
-          </p>
+      <div class="mt-16 text-center">
+        <div class="inline-block bg-white rounded-3xl shadow-xl p-8 border border-emerald-100">
+          <div class="flex items-center justify-center gap-2 mb-2">
+            <Star class="w-8 h-8 text-emerald-500 fill-emerald-500" />
+            <p class="text-2xl font-bold text-emerald-600">
+              {{achievements.filter(a => a.unlocked).length}} / {{ achievements.length }} наград собрано!
+            </p>
+          </div>
           <p class="text-gray-600">
             Продолжаем создавать новые воспоминания вместе!
           </p>
