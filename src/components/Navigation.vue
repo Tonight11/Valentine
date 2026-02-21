@@ -34,11 +34,11 @@ const sections = [
   { id: 'moods', name: 'Для тебя', icon: MessageCircle },
   { id: 'letters', name: 'Письма', icon: Mail },
   { id: 'reasons', name: 'Почему люблю', icon: Heart },
-  { id: 'places', name: 'Наши места', icon: MapPin },
+  // { id: 'places', name: 'Наши места', icon: MapPin },
   { id: 'plans', name: 'Будущее', icon: Star },
   { id: 'games', name: 'Игры', icon: Gamepad2 },
   { id: 'achievements', name: 'Достижения', icon: Trophy },
-  { id: 'quiz', name: 'Сюрприз', icon: Gift },
+  // { id: 'quiz', name: 'Сюрприз', icon: Gift },
 ];
 
 
