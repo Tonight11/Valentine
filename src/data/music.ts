@@ -2,6 +2,14 @@ import type { Song } from '@/types';
 
 export const songs: Song[] = [
     {
+        id: 0,
+        src: '/memory.mp3',
+        name: 'Memory',
+        artist: 'LiHee',
+        description: 'Песня о вальсе',
+        whySpecial: 'Хочу вальс с тобой)',
+    },
+    {
         id: 1,
         src: '/our-song.mp3',
         name: 'Наша песня',

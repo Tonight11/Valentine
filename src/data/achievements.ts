@@ -54,7 +54,7 @@ export const achievements: Achievement[] = [
         title: '6 месяцев вместе',
         description: 'Полгода любви и счастья!',
         icon: 'Star',
-        unlocked: false,
+        unlocked: true,
         date: '2026-03-08',
     },
     {
